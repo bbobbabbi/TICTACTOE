@@ -63,18 +63,18 @@ public class GameManager : Singleton<GameManager>
         switch (gameResult)
         {
             case GameResult.Win:
-                Text.text = "Player A win";
+                Text.text = "Player A 승리";
                 Debug.Log("playerA win");
                 startPanel.SetActive(true);
               
                 break;
             case GameResult.Lose:
-                Text.text = "Player B win";
+                Text.text = "Player B 승리";
                 Debug.Log("playerB win");
                 startPanel.SetActive(true);
                 break;
             case GameResult.Draw:
-                Text.text = "Draw";
+                Text.text = "비김";
                 Debug.Log("Draw");
                 startPanel.SetActive(true);
                 break;
@@ -124,7 +124,7 @@ public class GameManager : Singleton<GameManager>
                     }
                     else
                     {
-                        // TODO: 이미 있는 곳을 터치했을 때 처리
+
                     }
                 };
 
@@ -144,6 +144,7 @@ public class GameManager : Singleton<GameManager>
                     else
                     {
                         // TODO: 이미 있는 곳을 터치했을 때 처리
+
                     }
                 };
                 break;

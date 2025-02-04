@@ -47,6 +47,9 @@ public class Block : MonoBehaviour
     }
     private void OnMouseUpAsButton()
     {
-        onBlockClicked?.Invoke(_blockIndex);
+        if (makerSpriteRenderer.sprite == null)
+        {
+            onBlockClicked?.Invoke(_blockIndex);
+        }
     }
 }
