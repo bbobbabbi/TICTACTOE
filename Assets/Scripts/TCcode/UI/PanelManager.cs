@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class PanelManager : MonoBehaviour
 {
-    [SerializeField] private PanelController startPanelController;
     [SerializeField] private PanelController ConfirmPanelController;
     [SerializeField] private PanelController SettingPanelController;
-    [SerializeField] private PanelController TurnPanelController;
+    [SerializeField] private PanelController turnPanelController;
 
-    public enum PanelType { StartPanel, ConfirmPanel, ClosePanel,TurnPanel};
+    public enum PanelType { ConfirmPanel, ClosePanel,TurnPanel};
 
     private PanelController _currentPanelController;
 
@@ -19,10 +18,7 @@ public class PanelManager : MonoBehaviour
     /// <param name="panelType">표시할 패널</param>
     public void ShowPanel(PanelType panelType) 
     {
-        switch (panelType) { 
-            case PanelType.StartPanel:
-                ShowPanerlController(startPanelController);
-                break;
+        switch (panelType) {
             case PanelType.ConfirmPanel:
                 ShowPanerlController(ConfirmPanelController);
                 break;
@@ -30,19 +26,44 @@ public class PanelManager : MonoBehaviour
                 ShowPanerlController(SettingPanelController);
                 break; 
             case PanelType.TurnPanel:
-                ShowPanerlController(TurnPanelController);
+                ShowPanerlController(turnPanelController);
                 break;
 
         }
     }
 
     public void SetOXPanelAlbedoAndTurnText(GameManager.PlayerType playerType, float albedo) {
-            if (TurnPanelController is TurnPanelController trunPanelController) {
-                 trunPanelController.SetImageAlbedo(playerType, albedo);
-            trunPanelController.SetTurnText(playerType);
-            }
-    }
+            
+            if (turnPanelController is TurnPanelController currentTurnPanelController) {
+                switch (playerType) {
+                    case GameManager.PlayerType.PlayerA:
+                    currentTurnPanelController.SetImageAlbedo(TurnPanelController.GameUIMode.TurnA, albedo);
+                    currentTurnPanelController.SetTurnText(TurnPanelController.GameUIMode.TurnA);
+                    break;
 
+                    case GameManager.PlayerType.PlayerB:
+                    currentTurnPanelController.SetImageAlbedo(TurnPanelController.GameUIMode.TurnB, albedo);
+                    currentTurnPanelController.SetTurnText(TurnPanelController.GameUIMode.TurnB);
+                    break;
+            }
+        }
+    }
+    public void SetOXPanelEnd(GameManager.PlayerType playerType,string text)
+    {
+
+        if (turnPanelController is TurnPanelController currentTurnPanelController)
+        {
+            switch (playerType)
+            {
+                case GameManager.PlayerType.None:
+                    currentTurnPanelController.SetGameOverButton(TurnPanelController.GameUIMode.GameOver, text);
+                break;
+                case GameManager.PlayerType.Init:
+                    currentTurnPanelController.SetGameOverButton(TurnPanelController.GameUIMode.Init, text);
+                    break;
+            }
+        }
+    }
     /// <summary>
     /// 패널을 표시하는 함수
     /// 기존 패널이 있다면 Hide() 새로운 패널을 Show()

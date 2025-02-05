@@ -2,13 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using static GameManager;
+using static TurnPanelController;
 
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private BlockController blockController;
     [SerializeField] private PanelManager panelManager;
-    public enum PlayerType { None, PlayerA, PlayerB }
+    public enum PlayerType { None, PlayerA, PlayerB ,Init}
 
     private PlayerType[,] _board;
 
@@ -22,6 +25,12 @@ public class GameManager : Singleton<GameManager>
         Draw    // 비김
     }
 
+    private void SetFieldAgain() {
+        if (blockController.IsUnityNull()|| panelManager.IsUnityNull()) {
+            blockController = FindAnyObjectByType<BlockController>();
+            panelManager = FindAnyObjectByType<PanelManager>();
+        }
+    }
     private void Start()
     {
         // 게임 초기화
@@ -33,14 +42,15 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void InitGame()
     {
+        SetFieldAgain();
         // _board 초기화
         _board = new PlayerType[3, 3];
 
         // 블록 초기화
         blockController.InitBlocks();
 
-        //start panel 표시
-        panelManager.ShowPanel(PanelManager.PanelType.StartPanel);
+        StartGame();
+
     }
 
     /// <summary>
@@ -48,7 +58,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void StartGame()
     {
-        InitGame();
+        panelManager.SetOXPanelEnd(PlayerType.Init,"게임시작");
         panelManager.ShowPanel(PanelManager.PanelType.TurnPanel);
         SetTurn(TurnType.PlayerA);
     }
@@ -61,21 +71,25 @@ public class GameManager : Singleton<GameManager>
     private void EndGame(GameResult gameResult)
     {
         // TODO: 나중에 구현!!
-
+        string text;
         switch (gameResult)
         {
             case GameResult.Win:
-                
-                Debug.Log("playerA win");
-              
+
+                text = "playerA win";
+               
                 break;
             case GameResult.Lose:
-                Debug.Log("playerB win");
+                text = "playerB win";
                 break;
             case GameResult.Draw:
-                Debug.Log("Draw");
+                text = "Draw";
+                break;
+            default:
+                text = "";
                 break;
         }
+        panelManager.SetOXPanelEnd(PlayerType.None,text);
     }
 
     /// <summary>

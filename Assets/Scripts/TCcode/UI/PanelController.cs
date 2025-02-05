@@ -37,4 +37,9 @@ public class PanelController : MonoBehaviour
         IsShow = false;
         _onHideDelegate?.Invoke();
     }
+
+    public void SetStreatch(int minRL ,int minUD, int maxRL, int maxUD) {
+        _rectTransform.anchorMin = new Vector2(minRL, minUD);
+        _rectTransform.anchorMax = new Vector2(maxRL, maxUD);
+    }
 }
