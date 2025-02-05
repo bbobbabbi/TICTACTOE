@@ -7,10 +7,9 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private BlockController blockController;
-
-    [SerializeField] private GameObject startPanel;     // 임시 변수, 나중에 삭제 예정
-    [SerializeField] private TMP_Text Text;     // 임시 변수 ,나중에 삭제 예정
+    [SerializeField] private PanelManager panelManager;
     private enum PlayerType { None, PlayerA, PlayerB }
+
     private PlayerType[,] _board;
 
     private enum TurnType { PlayerA, PlayerB }
@@ -39,6 +38,9 @@ public class GameManager : Singleton<GameManager>
 
         // 블록 초기화
         blockController.InitBlocks();
+
+        //start panel 표시
+        panelManager.ShowPanel(PanelManager.PanelType.StartPanel);
     }
 
     /// <summary>
@@ -46,7 +48,6 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void StartGame()
     {
-        startPanel.SetActive(false);        // TODO: 테스트 코드, 나중에 삭제 예정
         InitGame();
         SetTurn(TurnType.PlayerA);
     }
@@ -63,20 +64,15 @@ public class GameManager : Singleton<GameManager>
         switch (gameResult)
         {
             case GameResult.Win:
-                Text.text = "Player A 승리";
+                
                 Debug.Log("playerA win");
-                startPanel.SetActive(true);
               
                 break;
             case GameResult.Lose:
-                Text.text = "Player B 승리";
                 Debug.Log("playerB win");
-                startPanel.SetActive(true);
                 break;
             case GameResult.Draw:
-                Text.text = "비김";
                 Debug.Log("Draw");
-                startPanel.SetActive(true);
                 break;
         }
     }
