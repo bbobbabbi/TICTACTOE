@@ -9,11 +9,12 @@ public class BlockController : MonoBehaviour
     public delegate void OnBlockClicked(int row, int col);
     public OnBlockClicked onBlockClickedDelegate;
 
-    public void InitBlocks() 
+    public void InitBlocks()
     {
-        for (int i = 0; i < blocks.Length; i++) 
+        for (int i = 0; i < blocks.Length; i++)
         {
-            blocks[i].InitMarker(i, blockIndex => {
+            blocks[i].InitMarker(i, blockIndex =>
+            {
                 var clickedRow = blockIndex / 3;
                 var clickedCol = blockIndex % 3;
                 onBlockClickedDelegate?.Invoke(clickedRow, clickedCol);
@@ -35,6 +36,28 @@ public class BlockController : MonoBehaviour
 
         //Block에게 마커 표시
         blocks[markerIndex].SetMarker(markerType);
+    }
+
+    public void SetBlockColor(GameManager.PlayerType playerType,(int row, int col)[] blockPositions)
+    {
+        if (playerType == GameManager.PlayerType.None) return;
+
+        foreach(var blockPosition in blockPositions) {
+            var blockIndex = blockPosition.row * 3 + blockPosition.col;
+            Color markerColor;
+            if (playerType == GameManager.PlayerType.PlayerA)
+            {
+                markerColor = Color.green;
+            }
+            else if (playerType == GameManager.PlayerType.PlayerB)
+            {
+                markerColor = Color.red;
+            }
+            else { 
+                markerColor= Color.black;
+            }
+            blocks[blockIndex].SetColor(markerColor);
+        }
     }
 
 }
