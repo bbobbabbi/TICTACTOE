@@ -7,8 +7,9 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private PanelController startPanelController;
     [SerializeField] private PanelController ConfirmPanelController;
     [SerializeField] private PanelController SettingPanelController;
+    [SerializeField] private PanelController TurnPanelController;
 
-    public enum PanelType { StartPanel, ConfirmPanel, ClosePanel};
+    public enum PanelType { StartPanel, ConfirmPanel, ClosePanel,TurnPanel};
 
     private PanelController _currentPanelController;
 
@@ -27,9 +28,18 @@ public class PanelManager : MonoBehaviour
                 break;
             case PanelType.ClosePanel:
                 ShowPanerlController(SettingPanelController);
+                break; 
+            case PanelType.TurnPanel:
+                ShowPanerlController(TurnPanelController);
                 break;
 
         }
+    }
+
+    public void SetOXPanelAlbedo(GameManager.PlayerType playerType, float albedo) {
+            if (TurnPanelController is TurnPanelController trunPanelController) {
+                 trunPanelController.SetImageAlbedo(playerType, albedo);
+            }
     }
 
     /// <summary>

@@ -49,6 +49,7 @@ public class GameManager : Singleton<GameManager>
     public void StartGame()
     {
         InitGame();
+        panelManager.ShowPanel(PanelManager.PanelType.TurnPanel);
         SetTurn(TurnType.PlayerA);
     }
 
@@ -106,7 +107,7 @@ public class GameManager : Singleton<GameManager>
         switch (turnType)
         {
             case TurnType.PlayerA:
-              
+                panelManager.SetOXPanelAlbedo(PlayerType.PlayerA, 1f);
                 Debug.Log("Player A turn");
                 blockController.onBlockClickedDelegate = (row, col) =>
                 {
@@ -126,6 +127,7 @@ public class GameManager : Singleton<GameManager>
 
                 break;
             case TurnType.PlayerB:
+                panelManager.SetOXPanelAlbedo(PlayerType.PlayerB, 1f);
                 Debug.Log("Player B turn");
                 blockController.onBlockClickedDelegate = (row, col) =>
                 {
