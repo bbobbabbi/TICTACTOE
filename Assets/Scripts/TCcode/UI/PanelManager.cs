@@ -39,7 +39,9 @@ public class PanelManager : MonoBehaviour
         if (_currentPanelController != null) {
             _currentPanelController.Hide();
         }
-            panerlController.Show();
+        panerlController.Show(() => { 
+            _currentPanelController = null;
+        });
             _currentPanelController = panerlController;
     }
 }
