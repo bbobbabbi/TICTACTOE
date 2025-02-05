@@ -36,9 +36,10 @@ public class PanelManager : MonoBehaviour
         }
     }
 
-    public void SetOXPanelAlbedo(GameManager.PlayerType playerType, float albedo) {
+    public void SetOXPanelAlbedoAndTurnText(GameManager.PlayerType playerType, float albedo) {
             if (TurnPanelController is TurnPanelController trunPanelController) {
                  trunPanelController.SetImageAlbedo(playerType, albedo);
+            trunPanelController.SetTurnText(playerType);
             }
     }
 
