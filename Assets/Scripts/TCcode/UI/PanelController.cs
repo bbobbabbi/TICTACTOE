@@ -12,6 +12,7 @@ public class PanelController : MonoBehaviour
     [SerializeField] private RectTransform panelRectTransform;
     private CanvasGroup _backgroundCanvasGroup;
 
+    private delegate void PopUpDelegate();
     private void Awake()
     {
         _backgroundCanvasGroup = GetComponent<CanvasGroup>();
@@ -38,7 +39,8 @@ public class PanelController : MonoBehaviour
      }
     public void Hide(OnConfirmButtonClick onConfirmButtonClick)
     {
-        onConfirmButtonClick?.Invoke();
+        _backgroundCanvasGroup.DOFade(0, 0.2f).SetEase(Ease.Linear);
+        panelRectTransform.DOScale(0, 0.2f).SetEase(Ease.OutBack).OnComplete(() => onConfirmButtonClick?.Invoke());
     }
     public void SetStreatch(int minRL ,int minUD, int maxRL, int maxUD) {
         _rectTransform.anchorMin = new Vector2(minRL, minUD);

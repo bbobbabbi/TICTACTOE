@@ -167,9 +167,13 @@ public class GameManager : Singleton<GameManager>
             case TurnType.PlayerB:
                 SetOXPanelAlbedoAndTurnText(PlayerType.PlayerB, 1f);
                 Debug.Log("Player B turn");
+
+                //TODO: 계산된 row,col값
+                (int row, int col) result = AIController.FindNextMove(_board);
+
                 blockController.onBlockClickedDelegate = (row, col) =>
                 {
-                    if (SetNewBoardValue(PlayerType.PlayerB, row, col))
+                    if (SetNewBoardValue(PlayerType.PlayerB, result.row, result.col))
                     {
                         var gameResult = CheckGameResult();
                         if (gameResult == GameResult.None)
@@ -184,6 +188,7 @@ public class GameManager : Singleton<GameManager>
                     }
                 };
                 break;
+
         }
     }
 
@@ -218,7 +223,7 @@ public class GameManager : Singleton<GameManager>
     }
 
     //게임의 승패를 판단하는 함수
-    private bool CheckGameWin(PlayerType playerType)
+    public bool CheckGameWin(PlayerType playerType)
     {
         // 가로로 마커가 일치하는지 확인
         for (var row = 0; row < _board.GetLength(0); row++)
@@ -259,6 +264,43 @@ public class GameManager : Singleton<GameManager>
 
         return false;
     }
+    public bool CheckGameWin(PlayerType playerType ,PlayerType[,] _board)
+    {
+        // 가로로 마커가 일치하는지 확인
+        for (var row = 0; row < _board.GetLength(0); row++)
+        {
+            if (_board[row, 0] == playerType && _board[row, 1] == playerType && _board[row, 2] == playerType)
+            {
+                (int, int)[] blocks = { (row, 0), (row, 1), (row, 2) };
+                return true;
+            }
+        }
+
+        // 세로로 마커가 일치하는지 확인
+        for (var col = 0; col < _board.GetLength(1); col++)
+        {
+            if (_board[0, col] == playerType && _board[1, col] == playerType && _board[2, col] == playerType)
+            {
+
+                (int, int)[] blocks = { (0, col), (1, col), (2, col) };
+                return true;
+            }
+        }
+
+        // 대각선 마커 일치하는지 확인
+        if (_board[0, 0] == playerType && _board[1, 1] == playerType && _board[2, 2] == playerType)
+        {
+            (int, int)[] blocks = { (0, 0), (1, 1), (2, 2) };
+            return true;
+        }
+        if (_board[0, 2] == playerType && _board[1, 1] == playerType && _board[2, 0] == playerType)
+        {
+            (int, int)[] blocks = { (0, 2), (1, 1), (2, 0) };
+            return true;
+        }
+        return false;
+    }
+
     public void SetOXPanelAlbedoAndTurnText(GameManager.PlayerType playerType, float albedo)
     {
 
