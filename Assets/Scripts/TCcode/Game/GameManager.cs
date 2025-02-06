@@ -10,15 +10,20 @@ using static TurnPanelController;
 
 public class GameManager : Singleton<GameManager>
 {
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject confirmPanel;
+
     private BlockController blockController;
     
     private TurnPanelController turnPanelController;
+    private enum TurnType { PlayerA, PlayerB }
     
     public enum PlayerType { None, PlayerA, PlayerB ,Init}
 
+    public enum GameType { SinglePlayer,DualPlayer}
+
     private PlayerType[,] _board;
 
-    private enum TurnType { PlayerA, PlayerB }
 
     private enum GameResult
     {
@@ -39,15 +44,6 @@ public class GameManager : Singleton<GameManager>
             GameManager.Instance.InitGame();
     }
 
-    /// <summary>
-    /// GameManager가 필요한 필드 값이 있는지 확인 후 없다면 찾아서 할당
-    /// </summary>
-    private void SetFieldAgain() {
-        if (blockController.IsUnityNull() || turnPanelController.IsUnityNull()) {
-            turnPanelController = FindAnyObjectByType<TurnPanelController>();
-            blockController = FindAnyObjectByType<BlockController>();
-        }
-    }
 
     /// <summary>
     /// 게임 초기화 함수
@@ -62,6 +58,19 @@ public class GameManager : Singleton<GameManager>
         if (!blockController.IsUnityNull()) { 
             blockController.InitBlocks();
             StartGame();
+        }
+    }
+
+
+    /// <summary>
+    /// GameManager가 필요한 필드 값이 있는지 확인 후 없다면 찾아서 할당
+    /// </summary>
+    private void SetFieldAgain()
+    {
+        if (blockController.IsUnityNull() || turnPanelController.IsUnityNull())
+        {
+            turnPanelController = FindAnyObjectByType<TurnPanelController>();
+            blockController = FindAnyObjectByType<BlockController>();
         }
     }
 
@@ -280,6 +289,16 @@ public class GameManager : Singleton<GameManager>
                     currentTurnPanelController.SetGameOverButton(TurnPanelController.GameUIMode.Init, text);
                     break;
             }
+        }
+    }
+    public void ChangeToGameScene(GameType gameType) {
+        switch (gameType) {
+            case GameType.SinglePlayer:
+                SceneManager.LoadScene("Game");
+                break;
+            case GameType.DualPlayer:
+                SceneManager.LoadScene("Game");
+                break;
         }
     }
 }
