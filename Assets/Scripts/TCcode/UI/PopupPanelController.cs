@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class PopupPanelController : Singleton<PopupPanelController>
@@ -65,6 +66,11 @@ public class PopupPanelController : Singleton<PopupPanelController>
             confirmButton.onClick.RemoveAllListeners();
             gameObject.SetActive(false);
         }
+
+    }
+
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
 
     }
 }

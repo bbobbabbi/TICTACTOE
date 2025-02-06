@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static GameManager;
 using static TurnPanelController;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] private BlockController blockController;
+    private BlockController blockController;
     
     private TurnPanelController turnPanelController;
     
@@ -27,21 +28,25 @@ public class GameManager : Singleton<GameManager>
         Draw    // 비김
     }
 
+    /// <summary>
+    /// 씬로딩시 씬 이름이 Game 이라면 InitGame 호출
+    /// </summary>
+    /// <param name="scene"></param>
+    /// <param name="mode"></param>
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Game")
+            GameManager.Instance.InitGame();
+    }
+
+    /// <summary>
+    /// GameManager가 필요한 필드 값이 있는지 확인 후 없다면 찾아서 할당
+    /// </summary>
     private void SetFieldAgain() {
-        if (blockController.IsUnityNull()) {
+        if (blockController.IsUnityNull() || turnPanelController.IsUnityNull()) {
+            turnPanelController = FindAnyObjectByType<TurnPanelController>();
             blockController = FindAnyObjectByType<BlockController>();
         }
-    }
-
-    private void Awake()
-    {
-        turnPanelController = FindAnyObjectByType<TurnPanelController>();
-    }
-
-    private void Start()
-    {
-        // 게임 초기화
-        InitGame();
     }
 
     /// <summary>
@@ -53,11 +58,11 @@ public class GameManager : Singleton<GameManager>
         // _board 초기화
         _board = new PlayerType[3, 3];
 
-        // 블록 초기화
-        blockController.InitBlocks();
-
-        StartGame();
-
+        // blockController가 있을 때 초기화 및 게임 시작
+        if (!blockController.IsUnityNull()) { 
+            blockController.InitBlocks();
+            StartGame();
+        }
     }
 
     /// <summary>
