@@ -25,8 +25,10 @@ public class GameManager : Singleton<GameManager>
 
     public enum GameType { SinglePlayer,DualPlayer}
 
+    public bool IsPlayerTurn { get; private set; }
     private PlayerType[,] _board;
 
+    
 
     private enum GameResult
     {
@@ -145,6 +147,7 @@ public class GameManager : Singleton<GameManager>
         switch (turnType)
         {
             case TurnType.PlayerA:
+                IsPlayerTurn = true;
                 SetOXPanelAlbedoAndTurnText(PlayerType.PlayerA, 1f);
                 Debug.Log("Player A turn");
                 blockController.onBlockClickedDelegate = (row, col) =>
@@ -165,6 +168,7 @@ public class GameManager : Singleton<GameManager>
 
                 break;
             case TurnType.PlayerB:
+                IsPlayerTurn = false;
                 SetOXPanelAlbedoAndTurnText(PlayerType.PlayerB, 1f);
                 Debug.Log("Player B turn");
 
@@ -187,9 +191,17 @@ public class GameManager : Singleton<GameManager>
 
                     }
                 };
-                break;
 
+                //Block에서 클릭시 발생되던 Invoke를 델리게이트에 할당 후 바로 Invoke
+                //바로 두면 기분 나쁘니까 조금 기다렸다 두기
+                StartCoroutine(DelayAction(UnityEngine.Random.Range(0.5f,3f),result.row,result.col));
+                break;
         }
+    }
+    IEnumerator DelayAction(float delayTime , int row, int col)
+    {
+        yield return new WaitForSeconds(delayTime);
+        blockController.onBlockClickedDelegate?.Invoke(row, col);
     }
 
     /// <summary>

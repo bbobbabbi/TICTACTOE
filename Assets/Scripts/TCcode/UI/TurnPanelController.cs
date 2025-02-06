@@ -45,7 +45,7 @@ public class TurnPanelController : PanelController
                 TurnText.text = "A의 턴 입니다";
                 break;
             case GameUIMode.TurnB:
-                TurnText.text = "B의 턴 입니다";
+                TurnText.text = "AI가 고민중입니다...";
                 break;
         }
     }

@@ -67,7 +67,7 @@ public class Block : MonoBehaviour
     }
     private void OnMouseUpAsButton()
     {
-        if (makerSpriteRenderer.sprite == null && !EventSystem.current.IsPointerOverGameObject())
+        if (makerSpriteRenderer.sprite == null && !EventSystem.current.IsPointerOverGameObject()&& GameManager.Instance.IsPlayerTurn)
         {
             _onBlockClicked?.Invoke(_blockIndex);
         }
