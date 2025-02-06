@@ -12,10 +12,9 @@ public class ConfirmPanelController : PanelController
     private OnConfirmButtonClick onConfirmButtonClick;
 
 
-    public void Show(string message, OnConfirmButtonClick onConfirmButtonClick, OnHide onHide) {
+    public void Show(string message, OnConfirmButtonClick onConfirmButtonClick) {
         messageText.text = message;
         this.onConfirmButtonClick = onConfirmButtonClick; 
-        base.Show(onHide);
     }
 
     /// <summary>

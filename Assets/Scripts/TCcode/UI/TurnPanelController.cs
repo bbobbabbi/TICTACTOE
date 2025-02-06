@@ -74,6 +74,7 @@ public class TurnPanelController : PanelController
                 break;
         }
     }
+  
 
     private void SetAlbedo(Image image, float albedo)
     {

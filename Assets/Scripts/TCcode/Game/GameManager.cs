@@ -10,7 +10,9 @@ using static TurnPanelController;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private BlockController blockController;
-    [SerializeField] private PanelManager panelManager;
+    
+    private TurnPanelController turnPanelController;
+    
     public enum PlayerType { None, PlayerA, PlayerB ,Init}
 
     private PlayerType[,] _board;
@@ -26,11 +28,16 @@ public class GameManager : Singleton<GameManager>
     }
 
     private void SetFieldAgain() {
-        if (blockController.IsUnityNull()|| panelManager.IsUnityNull()) {
+        if (blockController.IsUnityNull()) {
             blockController = FindAnyObjectByType<BlockController>();
-            panelManager = FindAnyObjectByType<PanelManager>();
         }
     }
+
+    private void Awake()
+    {
+        turnPanelController = FindAnyObjectByType<TurnPanelController>();
+    }
+
     private void Start()
     {
         // 게임 초기화
@@ -58,8 +65,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void StartGame()
     {
-        panelManager.SetOXPanelEnd(PlayerType.Init,"게임시작");
-        panelManager.ShowPanel(PanelManager.PanelType.TurnPanel);
+        SetOXPanelEnd(PlayerType.Init,"게임시작");
+        turnPanelController.Show();
         SetTurn(TurnType.PlayerA);
     }
 
@@ -89,7 +96,7 @@ public class GameManager : Singleton<GameManager>
                 text = "";
                 break;
         }
-        panelManager.SetOXPanelEnd(PlayerType.None,text);
+        SetOXPanelEnd(PlayerType.None,text);
     }
 
     /// <summary>
@@ -121,7 +128,7 @@ public class GameManager : Singleton<GameManager>
         switch (turnType)
         {
             case TurnType.PlayerA:
-                panelManager.SetOXPanelAlbedoAndTurnText(PlayerType.PlayerA, 1f);
+                SetOXPanelAlbedoAndTurnText(PlayerType.PlayerA, 1f);
                 Debug.Log("Player A turn");
                 blockController.onBlockClickedDelegate = (row, col) =>
                 {
@@ -141,7 +148,7 @@ public class GameManager : Singleton<GameManager>
 
                 break;
             case TurnType.PlayerB:
-                panelManager.SetOXPanelAlbedoAndTurnText(PlayerType.PlayerB, 1f);
+                SetOXPanelAlbedoAndTurnText(PlayerType.PlayerB, 1f);
                 Debug.Log("Player B turn");
                 blockController.onBlockClickedDelegate = (row, col) =>
                 {
@@ -234,5 +241,40 @@ public class GameManager : Singleton<GameManager>
         }
 
         return false;
+    }
+    public void SetOXPanelAlbedoAndTurnText(GameManager.PlayerType playerType, float albedo)
+    {
+
+        if (turnPanelController is TurnPanelController currentTurnPanelController)
+        {
+            switch (playerType)
+            {
+                case GameManager.PlayerType.PlayerA:
+                    currentTurnPanelController.SetImageAlbedo(TurnPanelController.GameUIMode.TurnA, albedo);
+                    currentTurnPanelController.SetTurnText(TurnPanelController.GameUIMode.TurnA);
+                    break;
+
+                case GameManager.PlayerType.PlayerB:
+                    currentTurnPanelController.SetImageAlbedo(TurnPanelController.GameUIMode.TurnB, albedo);
+                    currentTurnPanelController.SetTurnText(TurnPanelController.GameUIMode.TurnB);
+                    break;
+            }
+        }
+    }
+    public void SetOXPanelEnd(GameManager.PlayerType playerType, string text)
+    {
+
+        if (turnPanelController is TurnPanelController currentTurnPanelController)
+        {
+            switch (playerType)
+            {
+                case GameManager.PlayerType.None:
+                    currentTurnPanelController.SetGameOverButton(TurnPanelController.GameUIMode.GameOver, text);
+                    break;
+                case GameManager.PlayerType.Init:
+                    currentTurnPanelController.SetGameOverButton(TurnPanelController.GameUIMode.Init, text);
+                    break;
+            }
+        }
     }
 }
