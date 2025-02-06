@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static GameManager;
@@ -12,6 +13,8 @@ public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject confirmPanel;
+
+    private Transform canvasTransform;
 
     private BlockController blockController;
     
@@ -40,10 +43,10 @@ public class GameManager : Singleton<GameManager>
     /// <param name="mode"></param>
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        canvasTransform = GameObject.FindObjectOfType<Canvas>().GetComponent<Transform>();
         if (scene.name == "Game")
             GameManager.Instance.InitGame();
     }
-
 
     /// <summary>
     /// 게임 초기화 함수
@@ -299,6 +302,17 @@ public class GameManager : Singleton<GameManager>
             case GameType.DualPlayer:
                 SceneManager.LoadScene("Game");
                 break;
+        }
+    }
+    public void ChangeToMainScene()
+    {
+        SceneManager.LoadScene("Main");
+    }
+
+    public void OpenSettingPanel() {
+        if (!canvasTransform.IsUnityNull()) { 
+            var settingPanelObject = Instantiate(settingsPanel,canvasTransform);
+            settingPanelObject.GetComponent<PanelController>().Show();
         }
     }
 }

@@ -15,6 +15,6 @@ public class MainPanelController : MonoBehaviour
     }
     public void OnClickSettingButton()
     {
-
+        GameManager.Instance.OpenSettingPanel();
     }
 }

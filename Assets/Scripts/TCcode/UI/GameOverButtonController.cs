@@ -7,6 +7,6 @@ public class GameOverButtonController : MonoBehaviour
 {
     public void OnClickButton()
     {
-        SceneManager.LoadScene("Main");
+        GameManager.Instance.ChangeToMainScene();
     }
 }
