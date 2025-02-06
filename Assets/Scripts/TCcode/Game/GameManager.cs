@@ -309,10 +309,26 @@ public class GameManager : Singleton<GameManager>
         SceneManager.LoadScene("Main");
     }
 
+    /// <summary>
+    /// SettingPanel 열기
+    /// </summary>
     public void OpenSettingPanel() {
         if (!canvasTransform.IsUnityNull()) { 
             var settingPanelObject = Instantiate(settingsPanel,canvasTransform);
             settingPanelObject.GetComponent<PanelController>().Show();
         }
     }
+
+    /// <summary>
+    /// ConfirmPanel 열기
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="onConfirmButtonClick"></param>
+    public void OpenConfirmPanel(string message, ConfirmPanelController.OnConfirmButtonClick onConfirmButtonClick) {
+        if (!canvasTransform.IsUnityNull()) { 
+            var confirmPanelObject = Instantiate(confirmPanel,canvasTransform);
+            confirmPanelObject.GetComponent<ConfirmPanelController>().Show(message,onConfirmButtonClick);
+        }
+    }
+
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using static ConfirmPanelController;
 
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(CanvasGroup))]
@@ -35,7 +36,10 @@ public class PanelController : MonoBehaviour
         panelRectTransform.DOScale(0, 0.2f).SetEase(Ease.OutBack).OnComplete(() => Destroy(gameObject));
 
      }
-
+    public void Hide(OnConfirmButtonClick onConfirmButtonClick)
+    {
+        onConfirmButtonClick?.Invoke();
+    }
     public void SetStreatch(int minRL ,int minUD, int maxRL, int maxUD) {
         _rectTransform.anchorMin = new Vector2(minRL, minUD);
         _rectTransform.anchorMax = new Vector2(maxRL, maxUD);

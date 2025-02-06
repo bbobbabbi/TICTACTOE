@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,22 +15,23 @@ public class ConfirmPanelController : PanelController
 
     public void Show(string message, OnConfirmButtonClick onConfirmButtonClick) {
         messageText.text = message;
-        this.onConfirmButtonClick = onConfirmButtonClick; 
+        this.onConfirmButtonClick = onConfirmButtonClick;
+        base.Show();
     }
+    
 
     /// <summary>
     /// Confirm 버튼 클릭시 호출되는 함수
     /// </summary>
     public void OnClickConfirmButton() {
 
-        onConfirmButtonClick?.Invoke();
-        Hide();
+        Hide(onConfirmButtonClick);
     }
 
     /// <summary>
     /// x 버튼 클릭시 호출되는 함수
     /// </summary>
     public void OnClickCloseButton() {
-        Hide();
+        base.Hide();
     }
 }

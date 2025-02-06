@@ -1791,6 +1791,7 @@ GameObject:
   - component: {fileID: 1491884710148953908}
   - component: {fileID: 1767593966683119901}
   - component: {fileID: 9111503659825832346}
+  - component: {fileID: 9111503659825832347}
   m_Layer: 5
   m_Name: Trun Panel
   m_TagString: Untagged
@@ -1810,10 +1811,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27875387c4c5dba4aacb8abab31772bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelRectTransform: {fileID: 3313210545433859466}
   oImage: {fileID: 5196144544471730408}
   xImage: {fileID: 92428097077951983}
   TurnText: {fileID: 1479664788478775147}
   gameOverButton: {fileID: 5342681829322683295}
+--- !u!225 &9111503659825832347
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9056863763820811787}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
