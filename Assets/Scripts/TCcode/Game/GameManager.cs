@@ -173,7 +173,8 @@ public class GameManager : Singleton<GameManager>
                 Debug.Log("Player B turn");
 
                 //TODO: 계산된 row,col값
-                (int row, int col) result = AIController.FindNextMove(_board);
+                //(int row, int col) result = AIController.FindNextMove(_board);
+                (int row, int col) result = MinMaxController.GetBestMove(_board);
 
                 blockController.onBlockClickedDelegate = (row, col) =>
                 {
