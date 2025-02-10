@@ -1,18 +1,15 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static GameManager;
-using static TurnPanelController;
 
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject confirmPanel;
+    [SerializeField] private SoundController soundController;
 
     private Transform canvasTransform;
 
@@ -25,11 +22,17 @@ public class GameManager : Singleton<GameManager>
 
     public enum GameType { SinglePlayer,DualPlayer}
 
-    public bool IsPlayerTurn { get; private set; }   
-    public bool IsSinglePlay { get; private set; }
+    public GameType currentGameType;
+    public bool IsPlayerTurn { get; private set; }
+
+    private bool isSoundOn;
     
     private PlayerType[,] _board;
 
+    private void Start()
+    {
+        Application.targetFrameRate = 60;
+    }
 
 
     private enum GameResult
@@ -45,6 +48,15 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     /// <param name="scene"></param>
     /// <param name="mode"></param>
+    /// 
+
+
+    public void PlaySound(int audioNum) {
+        if (!soundController.IsUnityNull())
+        {
+            soundController.PlayAudioClip(audioNum);
+        }
+    }
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         canvasTransform = GameObject.FindObjectOfType<Canvas>().GetComponent<Transform>();
@@ -171,7 +183,7 @@ public class GameManager : Singleton<GameManager>
 
                 break;
             case TurnType.PlayerB:
-                if (IsSinglePlay) {
+                if (currentGameType == GameType.SinglePlayer) {
                     IsPlayerTurn = false;
                     SetOXPanelAlbedoAndTurnText(PlayerType.PlayerB, 1f);
                     Debug.Log("Player B turn");
@@ -379,11 +391,11 @@ public class GameManager : Singleton<GameManager>
     public void ChangeToGameScene(GameType gameType) {
         switch (gameType) {
             case GameType.SinglePlayer:
-                IsSinglePlay = true;
+                currentGameType = GameType.SinglePlayer;
                 SceneManager.LoadScene("Game");
                 break;
             case GameType.DualPlayer:
-                IsSinglePlay = false;
+                currentGameType = GameType.DualPlayer;
                 SceneManager.LoadScene("Game");
                 break;
         }
@@ -413,6 +425,21 @@ public class GameManager : Singleton<GameManager>
             var confirmPanelObject = Instantiate(confirmPanel,canvasTransform);
             confirmPanelObject.GetComponent<ConfirmPanelController>().Show(message,onConfirmButtonClick);
         }
+    }
+
+    public void SetIsSoundOn(bool isOn) {
+        if (isOn) {
+            soundController.SoundOn();
+        }
+        else { 
+            soundController.SoundOff();
+        }
+        isSoundOn = !isOn;
+    }
+
+    public bool SetIsSoundToggleOn()
+    {
+        return isSoundOn;
     }
 
 }

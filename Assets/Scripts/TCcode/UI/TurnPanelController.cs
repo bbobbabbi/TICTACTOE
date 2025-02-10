@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,7 +41,7 @@ public class TurnPanelController : PanelController
                 TurnText.text = "A의 턴 입니다";
                 break;
             case GameUIMode.TurnB:
-                if(GameManager.Instance.IsSinglePlay)
+                if(GameManager.Instance.currentGameType == GameManager.GameType.SinglePlayer)
                     TurnText.text = "AI가 고민중입니다...";
                 else
                     TurnText.text = "B의 턴 입니다";

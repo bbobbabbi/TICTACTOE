@@ -69,6 +69,7 @@ public class Block : MonoBehaviour
     {
         if (makerSpriteRenderer.sprite == null && !EventSystem.current.IsPointerOverGameObject()&& GameManager.Instance.IsPlayerTurn)
         {
+            GameManager.Instance.PlaySound(0);
             _onBlockClicked?.Invoke(_blockIndex);
         }
     }
