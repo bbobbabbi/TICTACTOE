@@ -81,4 +81,13 @@ public class TurnPanelController : PanelController
         var color = image.color;
         image.color = new Color(color.r, color.g, color.b, albedo);
     }
+
+    public void OnClickBackButton()
+    {
+        GameManager.Instance.OpenConfirmPanel("게임을 종료하시겠습니까?", () => { GameManager.Instance.ChangeToMainScene(); });
+    }
+    public void OnClickSettingButton()
+    {
+        GameManager.Instance.OpenSettingPanel();
+    }
 }
