@@ -25,10 +25,12 @@ public class GameManager : Singleton<GameManager>
 
     public enum GameType { SinglePlayer,DualPlayer}
 
-    public bool IsPlayerTurn { get; private set; }
+    public bool IsPlayerTurn { get; private set; }   
+    public bool IsSinglePlay { get; private set; }
+    
     private PlayerType[,] _board;
 
-    
+
 
     private enum GameResult
     {
@@ -168,34 +170,58 @@ public class GameManager : Singleton<GameManager>
 
                 break;
             case TurnType.PlayerB:
-                IsPlayerTurn = false;
-                SetOXPanelAlbedoAndTurnText(PlayerType.PlayerB, 1f);
-                Debug.Log("Player B turn");
+                if (IsSinglePlay) {
+                    IsPlayerTurn = false;
+                    SetOXPanelAlbedoAndTurnText(PlayerType.PlayerB, 1f);
+                    Debug.Log("Player B turn");
 
-                //TODO: 계산된 row,col값
-                //(int row, int col) result = AIController.FindNextMove(_board);
-                (int row, int col) result = MinMaxController.GetBestMove(_board);
+                    //TODO: 계산된 row,col값
+                    //(int row, int col) result = AIController.FindNextMove(_board);
+                    (int row, int col) result = MinMaxController.GetBestMove(_board);
 
-                blockController.onBlockClickedDelegate = (row, col) =>
-                {
-                    if (SetNewBoardValue(PlayerType.PlayerB, result.row, result.col))
+                    blockController.onBlockClickedDelegate = (row, col) =>
                     {
-                        var gameResult = CheckGameResult();
-                        if (gameResult == GameResult.None)
-                            SetTurn(TurnType.PlayerA);
+                        if (SetNewBoardValue(PlayerType.PlayerB, result.row, result.col))
+                        {
+                            var gameResult = CheckGameResult();
+                            if (gameResult == GameResult.None)
+                                SetTurn(TurnType.PlayerA);
+                            else
+                                EndGame(gameResult);
+                        }
                         else
-                            EndGame(gameResult);
-                    }
-                    else
+                        {
+                            // TODO: 이미 있는 곳을 터치했을 때 처리
+
+                        }
+                    };
+                    //Block에서 클릭시 발생되던 Invoke를 델리게이트에 할당 후 바로 Invoke
+                    //바로 두면 기분 나쁘니까 조금 기다렸다 두기
+                    StartCoroutine(DelayAction(UnityEngine.Random.Range(0.5f, 3f), result.row, result.col));
+                }
+                else{
+                    IsPlayerTurn = true;
+                    Debug.Log("Player B turn");
+                    SetOXPanelAlbedoAndTurnText(PlayerType.PlayerB, 1f);
+                    //TODO: 계산된 row,col값
+                    //(int row, int col) result = AIController.FindNextMove(_board);
+                    blockController.onBlockClickedDelegate = (row, col) =>
                     {
-                        // TODO: 이미 있는 곳을 터치했을 때 처리
+                        if (SetNewBoardValue(PlayerType.PlayerB, row, col))
+                        {
+                            var gameResult = CheckGameResult();
+                            if (gameResult == GameResult.None)
+                                SetTurn(TurnType.PlayerA);
+                            else
+                                EndGame(gameResult);
+                        }
+                        else
+                        {
+                            // TODO: 이미 있는 곳을 터치했을 때 처리
 
-                    }
-                };
-
-                //Block에서 클릭시 발생되던 Invoke를 델리게이트에 할당 후 바로 Invoke
-                //바로 두면 기분 나쁘니까 조금 기다렸다 두기
-                StartCoroutine(DelayAction(UnityEngine.Random.Range(0.5f,3f),result.row,result.col));
+                        }
+                    };
+                }
                 break;
         }
     }
@@ -352,9 +378,11 @@ public class GameManager : Singleton<GameManager>
     public void ChangeToGameScene(GameType gameType) {
         switch (gameType) {
             case GameType.SinglePlayer:
+                IsSinglePlay = true;
                 SceneManager.LoadScene("Game");
                 break;
             case GameType.DualPlayer:
+                IsSinglePlay = false;
                 SceneManager.LoadScene("Game");
                 break;
         }
