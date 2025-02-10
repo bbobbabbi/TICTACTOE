@@ -38,13 +38,14 @@ public class SwitchController : MonoBehaviour
             _handleRectTransform.DOAnchorPosX(-20, 0.2f);
             _backgroundImage.DOBlendableColor(offColor, 0.2f);
         }
-        GameManager.Instance.SetIsSoundOn(_isOn);
+        GameManager.Instance.SetIsSoundOffOn(_isOn);
         _isOn = isOn;
     }
 
     public void OnClickSwitch()
     {
-        Seton(!_isOn);
+        _isOn = !_isOn;
+        Seton(_isOn);
         GameManager.Instance.PlaySound(1);
     }
 }

@@ -427,14 +427,14 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void SetIsSoundOn(bool isOn) {
+    public void SetIsSoundOffOn(bool isOn) {
         if (isOn) {
-            soundController.SoundOn();
-        }
-        else { 
             soundController.SoundOff();
         }
-        isSoundOn = !isOn;
+        else { 
+            soundController.SoundOn();
+        }
+        isSoundOn = isOn;
     }
 
     public bool SetIsSoundToggleOn()
