@@ -98,6 +98,7 @@ public class GameManager : Singleton<GameManager>
     /// <param name="gameResult">win, lose, draw</param>
     private void EndGame(GameResult gameResult)
     {
+        IsPlayerTurn = false;
         // TODO: 나중에 구현!!
         string text;
         switch (gameResult)
