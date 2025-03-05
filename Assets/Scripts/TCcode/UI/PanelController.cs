@@ -40,7 +40,7 @@ public class PanelController : MonoBehaviour
     public void Hide(OnConfirmButtonClick onConfirmButtonClick)
     {
         _backgroundCanvasGroup.DOFade(0, 0.2f).SetEase(Ease.Linear);
-        panelRectTransform.DOScale(0, 0.2f).SetEase(Ease.OutBack).OnComplete(() => onConfirmButtonClick?.Invoke());
+        panelRectTransform.DOScale(0, 0.2f).SetEase(Ease.OutBack).OnComplete(() => { onConfirmButtonClick?.Invoke(); Destroy(gameObject); });
     }
     public void SetStreatch(int minRL ,int minUD, int maxRL, int maxUD) {
         _rectTransform.anchorMin = new Vector2(minRL, minUD);

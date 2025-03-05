@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
@@ -10,6 +9,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject confirmPanel;
     [SerializeField] private SoundController soundController;
+    [SerializeField] private GameObject signinPanel;
+    [SerializeField] private GameObject signupPanel;
 
     private Transform canvasTransform;
 
@@ -424,6 +425,20 @@ public class GameManager : Singleton<GameManager>
         if (!canvasTransform.IsUnityNull()) { 
             var confirmPanelObject = Instantiate(confirmPanel,canvasTransform);
             confirmPanelObject.GetComponent<ConfirmPanelController>().Show(message,onConfirmButtonClick);
+        }
+    }
+
+    public void OpenSigninPanel() {
+        if (!canvasTransform.IsUnityNull())
+        {
+            var signinPanelObj = Instantiate(signinPanel, canvasTransform);
+        }
+    }
+    public void OpenSignupPanel()
+    {
+        if (!canvasTransform.IsUnityNull())
+        {
+            var signupPanelObj = Instantiate(signupPanel, canvasTransform);
         }
     }
 
