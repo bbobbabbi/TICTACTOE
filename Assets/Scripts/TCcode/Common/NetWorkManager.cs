@@ -6,12 +6,24 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using static NetWorkManager;
 using static SigninPanelController;
+
+
+public class ScoreResultList
+{
+    public ScoreResult[] allUsers;
+}
 
 public class NetWorkManager : Singleton<NetWorkManager>
 {
     public delegate void Onlogined(int score);
     public Onlogined onLogined;
+    private int currentScore;
+    public struct ScoreData
+    {
+        public int score;
+    }
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
     }
@@ -52,7 +64,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
     public void OnClickScoreButton()
     {
         StartCoroutine(GetScore(() => { GameManager.Instance.OpenSigninPanel(); },
-            (userScore) => { onLogined?.Invoke(userScore.score); }));
+            (userScore) => { GameManager.Instance.currentUserName = userScore.username; onLogined?.Invoke(userScore.score); }));
     }
 
     IEnumerator GetScore(Action fail, Action<ScoreResult> success) {
@@ -75,8 +87,82 @@ public class NetWorkManager : Singleton<NetWorkManager>
             else {
                 var result = www.downloadHandler.text;
                 var userScore = JsonUtility.FromJson<ScoreResult>(result);
+                currentScore = userScore.score;
                 Debug.Log($"Score: {userScore.score}");
                 success?.Invoke(userScore);
+            }
+        }
+    }
+
+    public void OnClickAllScoreButton(Action finished = null)
+    {
+        StartCoroutine(GetAllScore(() => { GameManager.Instance.OpenSigninPanel(); },
+            (userScores) =>
+                {
+                    GameManager.Instance.scoreResult = userScores;
+                    finished?.Invoke();
+                }
+            ));
+    }
+    IEnumerator GetAllScore(Action fail, Action<ScoreResultList> success)
+    {
+        using (UnityWebRequest www = new UnityWebRequest($"{Constants.ServerURL}/users/allscore", UnityWebRequest.kHttpVerbGET))
+        {
+
+            www.downloadHandler = new DownloadHandlerBuffer();
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+            {
+                if (www.responseCode == 403)
+                {
+                    Debug.Log("로그인이 필요합니다.");
+                }
+                fail?.Invoke();
+            }
+            else
+            {
+                var result = www.downloadHandler.text;
+                var userScores = JsonUtility.FromJson<ScoreResultList>("{\"allUsers\":" + result + "}");
+                success?.Invoke(userScores);
+            }
+        }
+    }
+
+    public void AddScore() {
+        ScoreData scoreData = new ScoreData();
+        scoreData.score = currentScore + 10;
+        StartCoroutine(SetScore(scoreData, () => { }, () => { }));
+    }
+    IEnumerator SetScore(ScoreData score, Action fail, Action success)
+    {
+        string jsonStr = JsonUtility.ToJson(score);
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonStr);
+
+        using (UnityWebRequest www = new UnityWebRequest($"{Constants.ServerURL}/users/addscore", UnityWebRequest.kHttpVerbPOST))
+        {
+            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            www.downloadHandler = new DownloadHandlerBuffer();
+            www.SetRequestHeader("Content-Type", "application/json");
+            yield return www.SendWebRequest();
+      
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+            {
+                if (www.responseCode == 404)
+                {
+                    Debug.Log("사용자를 찾을 수 없습니다.");
+                }
+                if (www.responseCode == 403)
+                {
+                    Debug.Log("로그인이 필요합니다.");
+                }
+                fail?.Invoke();
+            }
+            else
+            {
+                var result = www.downloadHandler.text;
+                Debug.Log($"Result: {result}");
+                success?.Invoke();
             }
         }
     }

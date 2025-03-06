@@ -10,6 +10,7 @@ public class MainPanelController : MonoBehaviour
 {
     [SerializeField] private GameObject _SignInButton;
     [SerializeField] private TMP_Text Scoretext;
+    [SerializeField] private GameObject LeaderboardPrefab;
     private int Score;
     private void Awake()
     {
@@ -45,6 +46,15 @@ public class MainPanelController : MonoBehaviour
     public void OnClickSCoreInButton()
     {
         NetWorkManager.Instance.OnClickScoreButton();
+    }
+
+    public void OnClickAddSCoreInButton()
+    {
+        NetWorkManager.Instance.AddScore();
+    }
+    public void OnClickLeaderBoardButton()
+    {
+        Instantiate(LeaderboardPrefab, transform.parent);
     }
 
 }

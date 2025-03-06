@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SocialPlatforms;
 
 public class SigninPanelController : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class SigninPanelController : MonoBehaviour
         public string password;
     }
 
+    [System.Serializable]
     public struct ScoreResult {
         public string id;
         public string username;
@@ -39,6 +41,7 @@ public class SigninPanelController : MonoBehaviour
         signinData.username = username;
         signinData.password = password;
         StartCoroutine(NetWorkManager.Instance.Signin(signinData,InitTextField,() => {
+            GameManager.Instance.currentUserName = username;
             GameManager.Instance.ChangeToMainScene();
             Destroy(gameObject); }));
     }

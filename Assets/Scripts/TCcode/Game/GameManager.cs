@@ -12,6 +12,9 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject signinPanel;
     [SerializeField] private GameObject signupPanel;
 
+    public string currentUserName;
+    public ScoreResultList scoreResult;
+
     private Transform canvasTransform;
 
     private BlockController blockController;
@@ -119,7 +122,8 @@ public class GameManager : Singleton<GameManager>
             case GameResult.Win:
 
                 text = "playerA win";
-               
+                //현재 로그인된 아이디 db에 점수 추가
+                NetWorkManager.Instance.AddScore();
                 break;
             case GameResult.Lose:
                 text = "playerB win";
